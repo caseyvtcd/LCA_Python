@@ -1,38 +1,46 @@
-class Solution:
-
-    def __init__(self):
-        # Variable to store LCA node.
-        self.ans = None
-
-    def lowestCommonAncestor(self, root, p, q):
-        """
-        :type root: TreeNode
-        :type p: TreeNode
-        :type q: TreeNode
-        :rtype: TreeNode
-        """
-        def recurse_tree(current_node):
-
-            # If reached the end of a branch, return False.
-            if not current_node:
-                return False
-
-            # Left Recursion
-            left = recurse_tree(current_node.left)
-
-            # Right Recursion
-            right = recurse_tree(current_node.right)
-
-            # If the current node is one of p or q
-            mid = current_node == p or current_node == q
-
-            # If any two of the three flags left, right or mid become True.
-            if mid + left + right >= 2:
-                self.ans = current_node
-
-            # Return True if either of the three bool values is True.
-            return mid or left or right
-
-        # Traverse the tree
-        recurse_tree(root)
-        return self.ans
+class TreeNode:
+       def __init__(self, data, left = None, right = None):
+        self.data = data
+        self.left = left
+        self.right = right
+def insert(temp,data):
+   que = []
+   que.append(temp)
+   while (len(que)):
+      temp = que[0]
+      que.pop(0)
+      if (not temp.left):
+         if data is not None:
+            temp.left = TreeNode(data)
+         else:
+            temp.left = TreeNode(0)
+         break
+      else:
+         que.append(temp.left)
+         if (not temp.right):
+            if data is not None:
+               temp.right = TreeNode(data)
+            else:
+               temp.right = TreeNode(0)
+            break
+         else:
+            que.append(temp.right)
+def make_tree(elements):
+   Tree = TreeNode(elements[0])
+   for element in elements[1:]:
+      insert(Tree, element)
+   return Tree
+class Solution(object):
+   def lowestCommonAncestor(self, root, p, q):
+      if not root:
+         return None
+      if root.data == p or root.data ==q:
+         return root
+      left = self.lowestCommonAncestor(root.left, p, q)
+      right = self.lowestCommonAncestor(root.right, p, q)
+      if right and left:
+         return root
+      return right or left
+ob1 = Solution()
+tree = make_tree([3,5,1,6,2,0,8,None,None,7,4])
+print(ob1.lowestCommonAncestor(tree, 5, 1).data)
